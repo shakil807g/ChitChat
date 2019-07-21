@@ -1,0 +1,30 @@
+import com.shakil.chitchat.MsgType;
+
+
+CREATE TABLE user (
+  id INTEGER NOT NULL PRIMARY KEY AUTOINCREMENT,
+  first_name TEXT NOT NULL,
+  last_name TEXT NOT NULL,
+  gender TEXT NOT NULL,
+  phone TEXT NOT NULL,
+  profile_pic_thumb TEXT,
+  profile_pic TEXT
+ );
+
+
+ CREATE TABLE message(
+    id INTEGER NOT NULL PRIMARY KEY AUTOINCREMENT,
+    msg_type TEXT AS MsgType NOT NULL,
+
+
+
+
+
+
+ )
+
+
+
+
+
+-- CREATE INDEX hockeyPlayer_full_name ON hockeyPlayer(full_name);
