@@ -2,7 +2,8 @@ package com.shakil.chitchat.search
 
 import com.shakil.chitchat.extension.SafeMediatorLiveData
 
-data class SearchViewState(val message: List<String> = emptyList(),
+data class SearchViewState(
+                 val message: List<String> = emptyList(),
                  val contacts: List<String> = emptyList(),
                  val query: String = "")
 

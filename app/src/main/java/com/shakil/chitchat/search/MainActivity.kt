@@ -137,57 +137,72 @@ class CardFragment : Fragment() {
         mQueryHighlighter = QueryHighlighter().
             setQueryNormalizer(QueryHighlighter.QueryNormalizer.FOR_SEARCH)
 
+        val loadingViewBinder = LoadingViewBinder()
+        val bodyViewBinder = BodyViewBinder()
+
+        val viewBinders = mutableMapOf<SearchItemClass, SearchItemBinder>().apply {
+            put(loadingViewBinder.modelClass,loadingViewBinder as SearchItemBinder)
+            put(bodyViewBinder.modelClass,bodyViewBinder as SearchItemBinder)
+        }
+
+
+
+
+
+        list.adapter = SearchAdapter(viewBinders)
+
+
+        button.setOnClickListener {
+
+            val payloadlist = mutableListOf<Any>()
+            payloadlist.add(Body)
+
+            (list.adapter as SearchAdapter).submitList(payloadlist)
+        }
+
         viewModel.state.observe(this, Observer {
             currentState = it
-            list.requestModelBuild()
+
+            val payloadlist = mutableListOf<Any>()
+            payloadlist.add(LoadingIndicator)
+            payloadlist.add(Body)
+
+            (list.adapter as SearchAdapter).submitList(payloadlist)
+
+           // list.requestModelBuild()
         })
 
 
-          list.withModels {
-
-  //            Constants.IMAGES.forEach {
-  //                body {
-  //                    id("body$it")
-  //                    name("$it")
-  //                    query(currentState.query)
-  //                    queryHighlighter(mQueryHighlighter)
-  //                    onClick(View.OnClickListener {
-  //                        startActivity(Intent(this@MainActivity,SecoundActivity::class.java))
-  //                        finish()
-  //
-  //                    })
-  //                    pic(it)
-  //
-  //                }
-  //            }
-
-              currentState.message.forEach {
-                  header {
-                      id("$it")
-                      name("$it")
-                      query(currentState.query)
-                      queryHighlighter(mQueryHighlighter)
-                  }
-              }
-
-
-              currentState.contacts.forEach {
-                  body {
-                      id("body$it")
-                      name("$it")
-                      query(currentState.query)
-                      queryHighlighter(mQueryHighlighter)
-                      onClick(View.OnClickListener {
-                          //startActivity(Intent(this@MainActivity, SecoundActivity::class.java))
-
-                      })
-                      pic("https://image.shutterstock.com/image-photo/modern-businessman-business-woman-sitting-600w-210260359.jpg")
-
-                  }
-              }
-
-
-          }
+//          list.withModels {
+//
+//
+//              currentState.message.forEach {
+//                  header {
+//                      id("$it")
+//                      name("$it")
+//                      query(currentState.query)
+//                      queryHighlighter(mQueryHighlighter)
+//                  }
+//              }
+//
+//
+//              currentState.contacts.forEach {
+//                  body {
+//                      id("body$it")
+//                      name("$it")
+//                      query(currentState.query)
+//                      queryHighlighter(mQueryHighlighter)
+//                      onClick(View.OnClickListener {
+//                          //startActivity(Intent(this@MainActivity, SecoundActivity::class.java))
+//
+//                      })
+//                      pic("https://image.shutterstock.com/image-photo/modern-businessman-business-woman-sitting-600w-210260359.jpg")
+//
+//                  }
+//              }
+//
+//
+//          }
 
     }
 
