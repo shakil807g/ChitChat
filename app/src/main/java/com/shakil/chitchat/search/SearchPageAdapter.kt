@@ -13,7 +13,7 @@ typealias SearchItemClass = Class<out Any>
 
 typealias SearchItemBinder = SearchItemViewBinder<Any, RecyclerView.ViewHolder>
 
-/** Encapsulates logic to create and bind a ViewHolder for a type of item in the Feed. */
+/**dd Encapsulates logic to create and bind a ViewHolder for a type of item in the Feed. */
 abstract class SearchItemViewBinder<M, in VH : RecyclerView.ViewHolder>(
     val modelClass: Class<out M>
 ) : DiffUtil.ItemCallback<M>() {
