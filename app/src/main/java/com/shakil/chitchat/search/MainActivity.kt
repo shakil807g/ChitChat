@@ -1,6 +1,5 @@
 package com.shakil.chitchat.search
 
-import android.content.Intent
 import android.os.Bundle
 import android.util.Log
 import android.view.LayoutInflater
@@ -13,7 +12,10 @@ import androidx.lifecycle.ViewModelProvider
 import androidx.lifecycle.lifecycleScope
 import androidx.viewpager2.adapter.FragmentStateAdapter
 import com.google.android.material.tabs.TabLayoutMediator
-import com.shakil.chitchat.*
+import com.shakil.chitchat.QueryHighlighter
+import com.shakil.chitchat.R
+import com.shakil.chitchat.extension.ItemBinder
+import com.shakil.chitchat.extension.ItemClass
 import com.shakil.chitchat.extension.textChanges
 import kotlinx.android.synthetic.main.activity_main.*
 import kotlinx.android.synthetic.main.view_search_page.*
@@ -140,12 +142,10 @@ class CardFragment : Fragment() {
         val loadingViewBinder = LoadingViewBinder()
         val bodyViewBinder = BodyViewBinder()
 
-        val viewBinders = mutableMapOf<SearchItemClass, SearchItemBinder>().apply {
-            put(loadingViewBinder.modelClass,loadingViewBinder as SearchItemBinder)
-            put(bodyViewBinder.modelClass,bodyViewBinder as SearchItemBinder)
+        val viewBinders = mutableMapOf<ItemClass, ItemBinder>().apply {
+            put(loadingViewBinder.modelClass,loadingViewBinder as ItemBinder)
+            put(bodyViewBinder.modelClass,bodyViewBinder as ItemBinder)
         }
-
-
 
 
 
@@ -154,10 +154,10 @@ class CardFragment : Fragment() {
 
         button.setOnClickListener {
 
-            val payloadlist = mutableListOf<Any>()
-            payloadlist.add(Body)
-
-            (list.adapter as SearchAdapter).submitList(payloadlist)
+//            val payloadlist = mutableListOf<Any>()
+//            payloadlist.add(Body)
+//
+//            (list.adapter as SearchAdapter).submitList(payloadlist)
         }
 
         viewModel.state.observe(this, Observer {
@@ -165,7 +165,7 @@ class CardFragment : Fragment() {
 
             val payloadlist = mutableListOf<Any>()
             payloadlist.add(LoadingIndicator)
-            payloadlist.add(Body)
+         //   payloadlist.add(Body)
 
             (list.adapter as SearchAdapter).submitList(payloadlist)
 
