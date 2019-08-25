@@ -1,56 +1,96 @@
 package com.shakil.chitchat.search
 
+import android.app.Application
 import android.util.Log
-import androidx.lifecycle.ViewModel
+import androidx.lifecycle.AndroidViewModel
 import androidx.lifecycle.viewModelScope
-import com.shakil.chitchat.Normalizer
+import com.shakil.chitchat.Database
 import com.shakil.chitchat.extension.SafeMediatorLiveData
+import com.squareup.sqldelight.android.AndroidSqliteDriver
 import kotlinx.coroutines.async
 import kotlinx.coroutines.channels.ConflatedBroadcastChannel
-import kotlinx.coroutines.delay
 import kotlinx.coroutines.flow.*
 
-class SearchViewModel : ViewModel(){
+class SearchViewModel(app: Application) : AndroidViewModel(app) {
 
     private val queryChannel = ConflatedBroadcastChannel<String>()
 
     val state = SafeMediatorLiveData(initialValue = SearchViewState())
 
-
-    val messages = listOf(
-        "hello how are you",
-        "hi what are you doing",
-        "hi what are you doing",
-        "hi what are you doing",
-        "hi what are you doing",
-        "hi what are you doing",
-        "hi what are you doing",
-        "hi what are you doing",
-        "hi what are you doing",
-        "hi what are you doing",
-        "hi what are you doing",
-        "hi what are you doing",
-        "ok bye!!  off",
-        "ak bye!!  off",
-        "bk bye!! off",
-        "ck bye!! f",
-        "dk !!  off",
-        "ekk",
-        "fk by")
-
-
-    val contacts = listOf(
-        "Ali",
-        "Brown",
-        "John Doe")
+    val queries by lazy {
+        val androidSqlDriver = AndroidSqliteDriver(
+            schema = Database.Schema,
+            context = app,
+            name = "items.db"
+        )
+        Database(androidSqlDriver).usersEntityQueries
+    }
 
 
     init {
+      //  initDatabase()
 
         queryChannel.asFlow().flatMapLatest { _query ->
 
+            Log.d("flatMapLatest:","${kotlin.coroutines.coroutineContext}")
+
+            //val binder = mutableListOf<Any>()
+
+            if (_query.isBlank()) {
+                return@flatMapLatest flow {
+                    Log.d("_query.isBlank():","${kotlin.coroutines.coroutineContext}")
+
+                    emit(
+                        SearchViewState(
+                            itemBinders = listOf(),
+                            query = ""
+                        )
+                    )
+                }
+            }
+
+            channelFlow {
+                Log.d("flow:","${kotlin.coroutines.coroutineContext}")
+
+                val normalLizeQuery = Normalizer.forSearch(_query)
+
+                val getMessages = async {
+                    var listofUsers =
+                        queries.selectAll(mapper = {
+                                id, _, _, _, message, _, name, profile_pic ->
+                            MessageItem(id.toString(),name,message ?: "",profile_pic,normalLizeQuery)
+                        }).executeAsList()
+
+
+                    listofUsers = listofUsers.asSequence().filter { s ->
+                        val normalizedItem = Normalizer.forSearch(s.name)
+                        normalizedItem.startsWith(normalLizeQuery) ||
+                                normalizedItem.contains(" $normalLizeQuery")
+
+                    }.toList()
+                    listofUsers
+                }
+
+                val allItems = prepateAllData(getMessages.await())
+
+
+                send(SearchViewState(itemBinders = allItems,
+
+                    query = _query))
+
+
+            }
+        }.onEach {
+            Log.d("onEach : ${it.query}","${kotlin.coroutines.coroutineContext}")
+            setState(it)
+        }.launchIn(viewModelScope)
+
+
+        /*queryChannel.asFlow().flatMapLatest { _query ->
+
             if(_query.isBlank()){
-               return@flatMapLatest  flow { emit(state.value.copy(message = emptyList(),contacts = emptyList(),query = _query)) }
+               return@flatMapLatest  flow {
+                   emit(state.value.copy(message = emptyList(),contacts = emptyList(),query = _query)) }
             }
 
             val normalLizeQuery = Normalizer.forSearch(_query)
@@ -84,18 +124,53 @@ class SearchViewModel : ViewModel(){
 //
             }
         }.onEach {
-            Log.d("onEach: ${it.query}","${kotlin.coroutines.coroutineContext}")
+            Log.d("onEach : ${it.query}","${kotlin.coroutines.coroutineContext}")
             state.value = it
-        }.launchIn(viewModelScope)
+        }.launchIn(viewModelScope)*/
+
+
+    }
+
+    private fun prepateAllData(messages: List<MessageItem>): MutableList<Any> {
+        val viewBinders = mutableListOf<Any>()
+        if(messages.isNotEmpty()){
+            viewBinders + HeaderItem("Messages")
+            viewBinders + messages
+        }else{
+            viewBinders + NoContentItem
+        }
+        return viewBinders
+    }
+
+
+    private fun initDatabase() {
+
+        for(i in 1..100) {
+            queries.insertUser("shakil$i", "https://picsum.photos/id/$i/1000/1000")
+            val lastUserID = queries.findInsertRowid().executeAsOne().toString()
+            Log.d("lastUserID", "$lastUserID")
+            queries.insertMessage("Hello shakil for the $i time")
+            val lastMessageId = queries.findInsertRowid().executeAsOne().toString()
+            Log.d("lastMessageId", "$lastMessageId")
+            queries.insertConversation(lastMessageId,lastUserID)
+        }
+
+        Log.d("ItemDatabase", "${queries.selectAll().executeAsList()}")
+
+
 
 
     }
 
 
-    fun searchQuery(query: String){
+    fun searchQuery(query: String) {
         queryChannel.offer(query)
     }
 
+
+    fun setState(searchState: SearchViewState) {
+        state.value = searchState
+    }
 
 
 }

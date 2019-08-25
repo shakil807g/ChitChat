@@ -1,4 +1,4 @@
-package com.shakil.chitchat;
+package com.shakil.chitchat.search;
 
 import android.graphics.Typeface;
 import android.text.SpannableString;

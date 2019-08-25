@@ -7,6 +7,8 @@ import androidx.recyclerview.widget.ListAdapter
 import androidx.recyclerview.widget.RecyclerView
 import androidx.recyclerview.widget.RecyclerView.NO_ID
 import com.shakil.chitchat.R
+import com.shakil.chitchat.databinding.ItemHeaderBinding
+import com.shakil.chitchat.databinding.ItemMessageWithChainBinding
 import com.shakil.chitchat.extension.ItemBinder
 import com.shakil.chitchat.extension.ItemClass
 import com.shakil.chitchat.extension.ItemDiffCallback
@@ -20,7 +22,6 @@ class SearchAdapter(
     init {
         setHasStableIds(true)
     }
-
 
     private val viewTypeToBinders = viewBinders.mapKeys { it.value.getFeedItemType() }
 
@@ -59,62 +60,137 @@ class SearchAdapter(
 
 
 
+object NoContentItem
 
+class NoContentItemViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView)
 
-object LoadingIndicator
-
-class LoadingViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView){
-    fun bind(loadingind: LoadingIndicator) {
-     //   binding.executePendingBindings()
-    }
-}
-
-class LoadingViewBinder : ItemViewBinder<LoadingIndicator, LoadingViewHolder>(
-    LoadingIndicator::class.java
+class NoContentItemViewBinder : ItemViewBinder<NoContentItem, NoContentItemViewHolder>(
+    NoContentItem::class.java
 ) {
 
-    override fun getItemId(model: LoadingIndicator) = NO_ID
-
+    override fun getItemId(model: NoContentItem) = NO_ID
 
     override fun createViewHolder(parent: ViewGroup): RecyclerView.ViewHolder {
-        return LoadingViewHolder(LayoutInflater.from(parent.context)
+        return NoContentItemViewHolder(LayoutInflater.from(parent.context)
             .inflate(getFeedItemType(), parent, false))
     }
 
-    override fun bindViewHolder(model: LoadingIndicator, viewHolder: LoadingViewHolder) {
-        viewHolder.bind(model)
+    override fun bindViewHolder(model: NoContentItem, viewHolder: NoContentItemViewHolder) {
+    }
+
+    override fun getFeedItemType() = R.layout.item_no_content
+
+    override fun areItemsTheSame(oldItem: NoContentItem, newItem: NoContentItem) = true
+
+    override fun areContentsTheSame(oldItem: NoContentItem, newItem: NoContentItem) = true
+}
+
+
+
+
+object LoadingItem
+
+class LoadingItemViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView)
+
+class LoadingItemViewBinder : ItemViewBinder<LoadingItem, LoadingItemViewHolder>(
+    LoadingItem::class.java
+) {
+
+    override fun getItemId(model: LoadingItem) = NO_ID
+
+
+    override fun createViewHolder(parent: ViewGroup): RecyclerView.ViewHolder {
+        return LoadingItemViewHolder(LayoutInflater.from(parent.context)
+            .inflate(getFeedItemType(), parent, false))
+    }
+
+    override fun bindViewHolder(model: LoadingItem, viewHolder: LoadingItemViewHolder) {
     }
 
     override fun getFeedItemType() = R.layout.item_loading
 
-    override fun areItemsTheSame(oldItem: LoadingIndicator, newItem: LoadingIndicator) = true
+    override fun areItemsTheSame(oldItem: LoadingItem, newItem: LoadingItem) = true
 
-    override fun areContentsTheSame(oldItem: LoadingIndicator, newItem: LoadingIndicator) = true
+    override fun areContentsTheSame(oldItem: LoadingItem, newItem: LoadingItem) = true
 }
 
 
-data class Body(val data: String)
 
-class BodyViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView)
+data class HeaderItem(val txt: String)
+class HeaderItemViewHolder(private val binding: ItemHeaderBinding) : RecyclerView.ViewHolder(binding.root){
+    fun bind(headerItem : HeaderItem){
+        binding.headingTxt = headerItem.txt
+        binding.executePendingBindings()
+    }
+}
+class HeaderItemViewBinder: ItemViewBinder<HeaderItem, HeaderItemViewHolder>(
+    HeaderItem::class.java
+) {
 
-class BodyViewBinder : ItemViewBinder<Body, BodyViewHolder>(Body::class.java) {
+    override fun getItemId(model: HeaderItem) = NO_ID
+    override fun createViewHolder(parent: ViewGroup): RecyclerView.ViewHolder {
+        return HeaderItemViewHolder(ItemHeaderBinding())
+    }
+    override fun bindViewHolder(model: HeaderItem, viewHolder: HeaderItemViewHolder) {
+        viewHolder.bind(model)
+    }
+    override fun getFeedItemType() = R.layout.item_header
 
-    override fun getItemId(model: Body): Long = model.hashCode().toLong()
+    override fun areItemsTheSame(oldItem: HeaderItem, newItem: HeaderItem) = oldItem.txt == newItem.txt
+
+    override fun areContentsTheSame(oldItem: HeaderItem, newItem: HeaderItem) = oldItem.txt == newItem.txt
+}
+
+
+
+
+
+
+
+data class MessageItem(val id: String,
+                       val name: String,
+                       val message: String,
+                       val profilePic: String?,
+                       val query: String = "")
+
+class MessageItemViewHolder(val binding: ItemMessageWithChainBinding,
+                            val mQueryHighlighter: QueryHighlighter) : RecyclerView.ViewHolder(binding.root){
+
+    fun bind(messageItem: MessageItem){
+        binding.messageItem = messageItem
+        binding.queryHighlighter = mQueryHighlighter
+        binding.executePendingBindings()
+    }
+
+}
+
+
+
+
+
+class MessageItemViewBinder(
+    private val mQueryHighlighter: QueryHighlighter
+                            ) : ItemViewBinder<MessageItem, MessageItemViewHolder>(MessageItem::class.java) {
+
+    override fun getItemId(model: MessageItem): Long = model.id.toLong()
 
     override fun createViewHolder(parent: ViewGroup): RecyclerView.ViewHolder {
-        return BodyViewHolder(LayoutInflater.from(parent.context)
-            .inflate(getFeedItemType(), parent, false))
+        return MessageItemViewHolder(ItemMessageWithChainBinding.inflate(
+            LayoutInflater.from(parent.context),parent, false),
+            mQueryHighlighter
+        )
     }
 
-    override fun bindViewHolder(model: Body, viewHolder: BodyViewHolder) {
-
+    override fun bindViewHolder(model: MessageItem,
+                                viewHolder: MessageItemViewHolder) {
+        viewHolder.bind(model)
     }
 
-    override fun getFeedItemType() = R.layout.item_body
+    override fun getFeedItemType() = R.layout.item_message_with_chain
 
-    override fun areItemsTheSame(oldItem: Body, newItem: Body) = true
+    override fun areItemsTheSame(oldItem: MessageItem, newItem: MessageItem) = oldItem.id == newItem.id
 
-    override fun areContentsTheSame(oldItem: Body, newItem: Body) = true
+    override fun areContentsTheSame(oldItem: MessageItem, newItem: MessageItem) = oldItem == newItem
 }
 
 

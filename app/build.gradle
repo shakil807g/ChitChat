@@ -10,6 +10,8 @@ kapt {
     useBuildCache = true
 }
 
+apply plugin: "com.squareup.sqldelight"
+
 android {
     compileSdkVersion build_versions.compileSdkVersion
     defaultConfig {
@@ -84,10 +86,13 @@ dependencies {
     implementation Google.material
     implementation AndroidX.viewpager2
 
+    implementation Sqldelight.android_driver
+
 
     debugImplementation 'com.squareup.leakcanary:leakcanary-android:2.0-beta-2'
 
     testImplementation 'junit:junit:4.12'
+    testImplementation Sqldelight.sqlite_driver
     androidTestImplementation 'androidx.test.ext:junit:1.1.0'
     androidTestImplementation 'androidx.test.espresso:espresso-core:3.2.0'
 }

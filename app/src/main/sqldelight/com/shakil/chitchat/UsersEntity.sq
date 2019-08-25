@@ -1,0 +1,91 @@
+CREATE TABLE User(
+    id INTEGER NOT NULL PRIMARY KEY AUTOINCREMENT,
+    name TEXT NOT NULL,
+    profile_pic TEXT
+);
+
+
+CREATE TABLE Message(
+    id INTEGER NOT NULL PRIMARY KEY AUTOINCREMENT,
+    message TEXT
+);
+
+CREATE TABLE Conversation(
+    id INTEGER NOT NULL PRIMARY KEY AUTOINCREMENT,
+    message_id TEXT NOT NULL,
+    user_id TEXT NOT NULL,
+    FOREIGN KEY(message_id) REFERENCES Message(id),
+    FOREIGN KEY(user_id) REFERENCES User(id)
+);
+
+
+selectAll:
+SELECT *
+FROM Conversation
+JOIN Message ON Conversation.message_id = Message.id
+JOIN User ON Conversation.user_id = User.id;
+
+
+
+insertUser:
+INSERT OR FAIL INTO User(
+  name,
+  profile_pic
+)
+VALUES (?, ?);
+
+
+insertMessage:
+INSERT OR FAIL INTO Message(
+  message
+)
+VALUES (?);
+
+
+insertConversation:
+INSERT OR FAIL INTO Conversation(
+  message_id,
+  user_id
+)
+VALUES (?,?);
+
+
+findInsertRowid:
+SELECT last_insert_rowid()
+;
+
+
+
+-- insertConversation:
+-- INSERT INTO Conversation(message_id,user_id)
+-- VALUES ()
+
+
+
+-- selectAll:
+-- SELECT *
+-- FROM User;
+--
+-- selectById:
+-- SELECT *
+-- FROM User WHERE id = ?;
+--
+--
+-- selectNameFromUsers:
+-- SELECT * FROM User WHERE id = ?;
+--
+--
+-- insertOrReplace:
+-- INSERT OR REPLACE INTO User(
+--   id,
+--   name,
+--   profile_pic
+-- )
+-- VALUES (?, ?, ?);
+--
+--
+--
+-- empty:
+-- DELETE FROM User;
+
+

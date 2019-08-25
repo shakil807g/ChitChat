@@ -49,6 +49,11 @@ buildscript {
             "ktx": "androidx.room:room-ktx:2.1.0"
     ]
 
+    ext.Sqldelight = [
+            "gradle_plugin": "com.squareup.sqldelight:gradle-plugin:1.1.4",
+            "android_driver": "com.squareup.sqldelight:android-driver:1.1.4",
+            "sqlite_driver": "com.squareup.sqldelight:sqlite-driver:1.1.4",
+    ]
 
     ext.AndroidX_Navigation = [
             "fragment_ktx":"androidx.navigation:navigation-fragment-ktx:2.1.0-alpha05",
@@ -104,6 +109,7 @@ buildscript {
     dependencies {
         classpath 'com.android.tools.build:gradle:3.5.0'
         classpath KotlinDep.gradle_plugin
+        classpath Sqldelight.gradle_plugin
         // NOTE: Do not place your application dependencies here; they belong
         // in the individual module build.gradle files
     }

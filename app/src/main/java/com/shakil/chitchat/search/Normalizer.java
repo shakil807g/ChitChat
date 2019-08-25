@@ -1,4 +1,4 @@
-package com.shakil.chitchat;
+package com.shakil.chitchat.search;
 
 import java.util.Locale;
 import java.util.regex.Pattern;

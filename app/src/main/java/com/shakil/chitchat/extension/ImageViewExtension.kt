@@ -127,7 +127,7 @@ fun <T> ImageView.loadCircularImage(
         .apply(requestOptions)
         .thumbnail(thumbnail)
         .transition(DrawableTransitionOptions.withCrossFade())
-        .placeholder(R.drawable.circle_place_holder)
+       // .placeholder(R.drawable.circle_place_holder)
         .diskCacheStrategy(DiskCacheStrategy.ALL)
         .into(this)
         /*.into(object : BitmapImageViewTarget(this) {

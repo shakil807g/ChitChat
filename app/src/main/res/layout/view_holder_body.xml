@@ -19,7 +19,7 @@
 
         <variable
             name="queryHighlighter"
-            type="com.shakil.chitchat.QueryHighlighter" />
+            type="com.shakil.chitchat.search.QueryHighlighter" />
 
         <variable
             name="onClick"
