@@ -56,9 +56,9 @@ buildscript {
     ]
 
     ext.AndroidX_Navigation = [
-            "fragment_ktx":"androidx.navigation:navigation-fragment-ktx:2.1.0-alpha05",
-            "ui_ktx":"androidx.navigation:navigation-ui-ktx:2.1.0-alpha05",
-            "safe_args_gradle_plugin":"androidx.navigation:navigation-safe-args-gradle-plugin:2.1.0-alpha05"
+            "fragment_ktx":"androidx.navigation:navigation-fragment-ktx:2.2.0-alpha01",
+            "ui_ktx":"androidx.navigation:navigation-ui-ktx:2.2.0-alpha01",
+            "safe_args_gradle_plugin":"androidx.navigation:navigation-safe-args-gradle-plugin:2.2.0-alpha01"
     ]
 
 

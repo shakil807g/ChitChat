@@ -39,6 +39,8 @@ android {
     dataBinding {
         enabled = true
     }
+
+
 }
 
 dependencies {
@@ -61,22 +63,24 @@ dependencies {
     implementation AndroidX_Lifecycle.extensions
     implementation AndroidX_Lifecycle.viewmodel_ktx
     implementation AndroidX_Lifecycle.runtime_ktx
+    implementation 'androidx.legacy:legacy-support-v4:1.0.0'
+    kapt AndroidX_Lifecycle.compiler
 
-    kapt  AndroidX_Lifecycle.compiler
+
+    implementation AndroidX_Navigation.fragment_ktx
+    implementation AndroidX_Navigation.ui_ktx
 
 
     implementation Dagger.dagger
-    kapt  Dagger.compiler
+    kapt Dagger.compiler
     implementation Dagger.android_support
-    kapt  Dagger.android_processor
-
+    kapt Dagger.android_processor
 
 
     implementation Epoxy.epoxy
     implementation Epoxy.paging
     implementation Epoxy.dataBinding
     kapt Epoxy.processor
-
 
 
     implementation Glide.glide

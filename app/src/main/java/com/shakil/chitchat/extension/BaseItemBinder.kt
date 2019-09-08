@@ -21,6 +21,10 @@ abstract class ItemViewBinder<M, in VH : RecyclerView.ViewHolder>(
     // Having these as non abstract because not all the viewBinders are required to implement them.
     open fun onViewRecycled(viewHolder: VH) = Unit
     open fun onViewDetachedFromWindow(viewHolder: VH) = Unit
+
+
+
+
 }
 
 internal class ItemDiffCallback(

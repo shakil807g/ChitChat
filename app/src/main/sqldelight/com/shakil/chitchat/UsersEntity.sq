@@ -26,6 +26,14 @@ JOIN Message ON Conversation.message_id = Message.id
 JOIN User ON Conversation.user_id = User.id;
 
 
+selectAllMessages:
+SELECT * FROM Message;
+
+
+selectAllUsers:
+SELECT * FROM User;
+
+
 
 insertUser:
 INSERT OR FAIL INTO User(

@@ -117,20 +117,25 @@ class LoadingItemViewBinder : ItemViewBinder<LoadingItem, LoadingItemViewHolder>
 
 
 data class HeaderItem(val txt: String)
+
 class HeaderItemViewHolder(private val binding: ItemHeaderBinding) : RecyclerView.ViewHolder(binding.root){
     fun bind(headerItem : HeaderItem){
         binding.headingTxt = headerItem.txt
         binding.executePendingBindings()
     }
 }
+
 class HeaderItemViewBinder: ItemViewBinder<HeaderItem, HeaderItemViewHolder>(
     HeaderItem::class.java
 ) {
 
-    override fun getItemId(model: HeaderItem) = NO_ID
+    override fun getItemId(model: HeaderItem) = "Header${model.txt}".hashCode().toLong()
+
     override fun createViewHolder(parent: ViewGroup): RecyclerView.ViewHolder {
-        return HeaderItemViewHolder(ItemHeaderBinding())
+        return HeaderItemViewHolder(ItemHeaderBinding.inflate(
+            LayoutInflater.from(parent.context),parent, false))
     }
+
     override fun bindViewHolder(model: HeaderItem, viewHolder: HeaderItemViewHolder) {
         viewHolder.bind(model)
     }
