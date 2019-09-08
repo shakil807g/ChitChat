@@ -6,8 +6,6 @@ import androidx.lifecycle.AndroidViewModel
 import androidx.lifecycle.viewModelScope
 import com.shakil.chitchat.Database
 import com.shakil.chitchat.extension.SafeMediatorLiveData
-import com.shakil.chitchat.flowredux.SideEffect
-import com.shakil.chitchat.flowredux.reduxStore
 import com.squareup.sqldelight.android.AndroidSqliteDriver
 import kotlinx.coroutines.async
 import kotlinx.coroutines.channels.ConflatedBroadcastChannel
