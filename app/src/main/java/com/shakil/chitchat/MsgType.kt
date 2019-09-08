@@ -7,3 +7,6 @@ enum class MsgType {
     TEXT,
     EVENT
 }
+
+
+//bug fix 1
