@@ -22,6 +22,7 @@ fun <A, S> Flow<A>.reduxStore(
     val loopback: BroadcastChannel<A> = BroadcastChannel(100)
 
     // Emit the initial state
+    // added in new Feature Branch
     println("Emitting initial state")
     send(currentState)
 
@@ -33,6 +34,7 @@ fun <A, S> Flow<A>.reduxStore(
                 sideEffect(loopbackFlow, stateAccessor).collect { action: A ->
                     println("SideEffect$index: action $action received")
 
+                    // added in new Feature Branch
                     // Change state
                     mutex.lock()
                     val newState: S = reducer(currentState, action)
