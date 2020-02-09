@@ -3,7 +3,6 @@
     xmlns:tools="http://schemas.android.com/tools"
     package="com.shakil.chitchat">
 
-
     <uses-permission android:name="android.permission.INTERNET" />
 
     <application
@@ -14,24 +13,15 @@
         android:supportsRtl="true"
         android:theme="@style/AppTheme"
         tools:ignore="GoogleAppIndexingWarning">
-        <activity android:name=".search.SearchActivity">
-
-        </activity>
-        <activity android:name=".SecoundActivity" />
-
-
-        <activity android:name=".fragmentanim.FragmentHolderActivity">
-
+        <activity android:name=".tokbox.VideoActivity">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
-
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
-
         </activity>
-
-
-
+        <activity android:name=".search.SearchActivity"></activity>
+        <activity android:name=".SecoundActivity" />
+        <activity android:name=".fragmentanim.FragmentHolderActivity"/>
     </application>
 
 </manifest>
